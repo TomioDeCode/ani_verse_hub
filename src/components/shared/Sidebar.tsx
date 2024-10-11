@@ -13,7 +13,7 @@ const NavBox = () => {
     <nav className="mt-5 flex flex-col space-y-5 px-4">
       <Logo />
       <div className="space-y-2">
-        <Title title="HOME" />
+        <Title className="text-[#807C7C] font-medium" title="HOME" />
         <SideLink href="/home" text="Home">
           <AiOutlineHome className="text-lg" />
         </SideLink>
@@ -25,7 +25,7 @@ const NavBox = () => {
         </SideLink>
       </div>
       <div className="space-y-2">
-        <Title title="LIBRARY" />
+        <Title className="text-[#807C7C] font-medium" title="LIBRARY" />
         <SideLink href="/recent" text="Recent">
           <BsClock className="text-lg" />
         </SideLink>
