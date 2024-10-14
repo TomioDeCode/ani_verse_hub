@@ -14,7 +14,7 @@ import React from "react";
 
 interface AnimeSwiperProps {
   animeData: {
-    id: string;
+    id: number;
     title: string;
     imageUrl: string;
   }[];
@@ -33,7 +33,7 @@ const AnimeSwiper = ({ animeData }: AnimeSwiperProps) => {
       <Swiper
         modules={[Navigation, Pagination]}
         spaceBetween={20}
-        slidesPerView={1}
+        slidesPerView={3}
         navigation
         pagination={{ clickable: true }}
         className="w-full max-w-xl mx-auto py-8"
@@ -41,7 +41,7 @@ const AnimeSwiper = ({ animeData }: AnimeSwiperProps) => {
         {animeData.map(({ id, title, imageUrl }) => (
           <SwiperSlide key={id}>
             <AnimeCard
-              imageClassName="h-[200px]"
+              imageClassName="h-[300px]"
               contentClassName="h-[200px]"
               anime={{ id, title, imageUrl }}
               altText={`Anime cover for ${title}`}
