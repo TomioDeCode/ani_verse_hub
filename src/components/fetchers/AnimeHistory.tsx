@@ -1,6 +1,6 @@
 "use client";
 
-import { useTrendAnimeStore } from "@/hooks/useTrendAnimeHooks";
+import { useHistoryAnimeStore } from "@/hooks/useHistoryAnimeHooks";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import React, { useEffect } from "react";
@@ -8,7 +8,7 @@ import { BsClock } from "react-icons/bs";
 
 const AnimeHistory = () => {
   const { animeData, loading, error, fetchRecommendedAnime } =
-    useTrendAnimeStore();
+    useHistoryAnimeStore();
 
   useEffect(() => {
     fetchRecommendedAnime();
