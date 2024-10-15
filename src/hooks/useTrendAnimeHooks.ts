@@ -22,5 +22,6 @@ export function useTrendAnimeStore() {
     loading,
     error,
     fetchRecommendedAnime,
+    trendState,
   };
 }

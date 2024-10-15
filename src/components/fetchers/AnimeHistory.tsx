@@ -3,10 +3,10 @@
 import { useTrendAnimeStore } from "@/hooks/useTrendAnimeHooks";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
-import { IoMdStar } from "react-icons/io";
 import React, { useEffect } from "react";
+import { BsClock } from "react-icons/bs";
 
-const AnimeTrends = () => {
+const AnimeHistory = () => {
   const { animeData, loading, error, fetchRecommendedAnime } =
     useTrendAnimeStore();
 
@@ -20,12 +20,12 @@ const AnimeTrends = () => {
   return (
     <AnimeSwiper
       data={animeData}
-      title="Trends Anime"
-      icon={<IoMdStar size={25} />}
+      title="History Anime"
+      icon={<BsClock size={17} className="mt-1" />}
       renderCard={({ id, title, imageUrl }) => (
         <AnimeCard
-          imageClassName="h-[280px]"
-          contentClassName="h-[200px]"
+          imageClassName="h-[180px]"
+          contentClassName="h-[300px]"
           anime={{ id, title, imageUrl }}
           altText={`Anime cover for ${title}`}
         />
@@ -34,4 +34,4 @@ const AnimeTrends = () => {
   );
 };
 
-export default AnimeTrends;
+export default AnimeHistory;

@@ -1,6 +1,5 @@
 "use client";
 
-import { IoStarSharp } from "react-icons/io5";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
@@ -10,42 +9,44 @@ import "swiper/css/pagination";
 
 import AnimeCard from "@/components/core/AnimeCard";
 import Title from "../common/Title";
-import React from "react";
+import React, { ReactNode } from "react";
 
-interface AnimeSwiperProps {
-  animeData: {
-    id: number;
-    title: string;
-    imageUrl: string;
-  }[];
+interface CardSwiperProps<T> {
+  data: T[];
+  renderCard: (item: T) => ReactNode;
+  title?: string;
+  icon?: ReactNode;
+  slidesPerView?: number;
+  spaceBetween?: number;
+  pagination?: boolean;
 }
 
-const AnimeSwiper = ({ animeData }: AnimeSwiperProps) => {
+const CardSwiper = <T extends { id: number }>({
+  data,
+  renderCard,
+  title = "Top Items",
+  icon,
+  slidesPerView = 3,
+  spaceBetween = 20,
+  pagination = true,
+}: CardSwiperProps<T>) => {
   return (
     <div className="bg-accent-foreground p-4 rounded-lg shadow-lg shadow-foreground">
       <div className="flex items-center gap-1">
-        <IoStarSharp className="-mt-4 text-primary w-5 h-5" />
-        <Title
-          className="-mt-2 text-primary font-bold uppercase"
-          title="Top Anime"
-        />
+        {icon && <div className="-mt-5 text-primary">{icon}</div>}
+        <Title className="-mt-2 text-primary font-bold uppercase" title={title} />
       </div>
       <Swiper
         modules={[Navigation, Pagination]}
-        spaceBetween={20}
-        slidesPerView={3}
+        spaceBetween={spaceBetween}
+        slidesPerView={slidesPerView}
         navigation
-        pagination={{ clickable: true }}
+        pagination={pagination ? { clickable: true } : false}
         className="w-full max-w-xl mx-auto py-8"
       >
-        {animeData.map(({ id, title, imageUrl }) => (
-          <SwiperSlide key={id}>
-            <AnimeCard
-              imageClassName="h-[300px]"
-              contentClassName="h-[200px]"
-              anime={{ id, title, imageUrl }}
-              altText={`Anime cover for ${title}`}
-            />
+        {data.map((item) => (
+          <SwiperSlide key={item.id}>
+            {renderCard(item)}
           </SwiperSlide>
         ))}
       </Swiper>
@@ -53,4 +54,4 @@ const AnimeSwiper = ({ animeData }: AnimeSwiperProps) => {
   );
 };
 
-export default AnimeSwiper;
+export default CardSwiper;
