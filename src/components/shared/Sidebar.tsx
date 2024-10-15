@@ -8,7 +8,7 @@ import { AiOutlineHome, AiOutlineDiscord } from "react-icons/ai";
 import { TbSettings, TbHelpHexagon, TbLogout } from "react-icons/tb";
 import { Button } from "../ui/button";
 
-const NavBox = () => {
+const Sidebar = () => {
   return (
     <nav className="mt-5 flex flex-col space-y-5 px-4">
       <Logo />
@@ -55,4 +55,4 @@ const NavBox = () => {
   );
 };
 
-export default NavBox;
+export default Sidebar;

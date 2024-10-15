@@ -1,3 +1,4 @@
+import Navbar from "@/components/shared/Navbar";
 import Sidebar from "@/components/shared/Sidebar";
 import React from "react";
 
@@ -8,20 +9,20 @@ type HomeProps = {
 
 const HomeTemplate = ({ children, showGreeting = false }: HomeProps) => {
   return (
-    <div className="flex h-[100vh] bg-secondary-foreground max-h-[100vh]">
+    <div className="flex h-[100vh] justify-center bg-secondary-foreground max-h-screen">
       <aside className="bg-foreground w-[20%] p-3">
         <Sidebar />
       </aside>
       <main
-        className={`bg-accent-foreground ${
-          showGreeting ? "w-[50%]" : "w-[75%]"
-        } p-5`}
+        className={`bg-accent-foreground p-5 ${
+          showGreeting ? "flex-grow-[2]" : "flex-grow"
+        }`}
       >
         {children}
       </main>
       {showGreeting && (
-        <div className="bg-accent-foreground w-[30%] p-6 text-secondary">
-          Page
+        <div className="bg-foreground flex-grow text-secondary">
+          <Navbar />
         </div>
       )}
     </div>
