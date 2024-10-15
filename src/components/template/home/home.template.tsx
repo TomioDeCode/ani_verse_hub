@@ -8,7 +8,7 @@ type HomeProps = {
 
 const HomeTemplate = ({ children, showGreeting = false }: HomeProps) => {
   return (
-    <div className="flex h-screen bg-secondary-foreground">
+    <div className="flex h-[100vh] bg-secondary-foreground max-h-[100vh]">
       <aside className="bg-foreground w-[20%] p-3">
         <Sidebar />
       </aside>

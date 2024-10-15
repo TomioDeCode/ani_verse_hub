@@ -3,10 +3,10 @@
 import { useTrendAnimeStore } from "@/hooks/useTrendAnimeHooks";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
-import { IoMdStar } from "react-icons/io";
+import { IoIosHeart } from "react-icons/io";
 import React, { useEffect } from "react";
 
-const AnimeTrends = () => {
+const AnimeRecomended = () => {
   const { animeData, loading, error, fetchRecommendedAnime } =
     useTrendAnimeStore();
 
@@ -20,8 +20,8 @@ const AnimeTrends = () => {
   return (
     <AnimeSwiper
       data={animeData}
-      title="Trends Anime"
-      icon={<IoMdStar size={25} />}
+      title="Recomended Anime"
+      icon={<IoIosHeart size={18} className="mt-1" />}
       renderCard={({ id, title, imageUrl }) => (
         <AnimeCard
           imageClassName="h-[250px]"
@@ -34,4 +34,4 @@ const AnimeTrends = () => {
   );
 };
 
-export default AnimeTrends;
+export default AnimeRecomended;
