@@ -1,17 +1,17 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  trendStateAtom,
+  trendAnimeErrorSelector,
+  trendAnimeLoadingSelector,
   trendAnimeSelector,
-  trendLoadingSelector,
-  trendErrorSelector,
+  trendAnimeStateAtom,
   fetchTrendAnime,
 } from "@/store/useAnimeTrendStore";
 
 export function useTrendAnimeStore() {
-  const [trendState, setTrendState] = useRecoilState(trendStateAtom);
+  const [trendState, setTrendState] = useRecoilState(trendAnimeStateAtom);
   const animeData = useRecoilValue(trendAnimeSelector);
-  const loading = useRecoilValue(trendLoadingSelector);
-  const error = useRecoilValue(trendErrorSelector);
+  const loading = useRecoilValue(trendAnimeLoadingSelector);
+  const error = useRecoilValue(trendAnimeErrorSelector);
 
   const fetchRecommendedAnime = async () => {
     await fetchTrendAnime(setTrendState);
@@ -25,3 +25,4 @@ export function useTrendAnimeStore() {
     trendState,
   };
 }
+

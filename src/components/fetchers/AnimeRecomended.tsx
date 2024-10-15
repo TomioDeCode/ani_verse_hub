@@ -1,6 +1,6 @@
 "use client";
 
-import { useTrendAnimeStore } from "@/hooks/useTrendAnimeHooks";
+import { useRecomendedAnimeStore } from "@/hooks/useRecomendedAnimeHooks";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import { IoIosHeart } from "react-icons/io";
@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 
 const AnimeRecomended = () => {
   const { animeData, loading, error, fetchRecommendedAnime } =
-    useTrendAnimeStore();
+    useRecomendedAnimeStore();
 
   useEffect(() => {
     fetchRecommendedAnime();
