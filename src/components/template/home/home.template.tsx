@@ -1,5 +1,7 @@
+import AnimeTop from "@/components/fetchers/AnimeTop";
 import Navbar from "@/components/shared/Navbar";
 import Sidebar from "@/components/shared/Sidebar";
+import TopCard from "@/components/shared/TopCard";
 import React from "react";
 
 type HomeProps = {
@@ -22,7 +24,12 @@ const HomeTemplate = ({ children, showGreeting = false }: HomeProps) => {
       </main>
       {showGreeting && (
         <div className="bg-foreground flex-grow text-secondary">
-          <Navbar />
+          <div>
+            <Navbar />
+          </div>
+          <div>
+            <AnimeTop />
+          </div>
         </div>
       )}
     </div>

@@ -51,8 +51,11 @@ export async function fetchRecomendedAnime(
     valOrUpdater:
       | RecomendedState
       | ((currVal: RecomendedState) => RecomendedState)
-  ) => void
+  ) => void,
+  currentState: RecomendedState
 ) {
+  if (currentState.loading) return;
+
   setRecomendedState((prevState) => ({
     ...prevState,
     loading: true,

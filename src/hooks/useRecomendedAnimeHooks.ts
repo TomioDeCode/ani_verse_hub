@@ -10,11 +10,11 @@ import {
 export function useRecomendedAnimeStore() {
   const [trendState, setTrendState] = useRecoilState(recomendedStateAtom);
   const animeData = useRecoilValue(recomendedAnimeSelector);
-  const loading = useRecoilValue(recomendedErrorSelector);
-  const error = useRecoilValue(recomendedLoadingSelector);
+  const loading = useRecoilValue(recomendedLoadingSelector);
+  const error = useRecoilValue(recomendedErrorSelector);
 
   const fetchRecommendedAnime = async () => {
-    await fetchRecomendedAnime(setTrendState);
+    await fetchRecomendedAnime(setTrendState, trendState);
   };
 
   return {

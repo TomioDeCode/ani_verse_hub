@@ -7,7 +7,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import AnimeCard from "@/components/core/AnimeCard";
 import Title from "../common/Title";
 import React, { ReactNode } from "react";
 

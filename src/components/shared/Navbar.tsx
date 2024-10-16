@@ -1,10 +1,9 @@
-import NavLink from "../fragments/NavLink";
 import React from "react";
+import Title from "../common/Title";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
-import Title from "../common/Title";
 
 const Navbar = () => {
   return (

@@ -27,7 +27,7 @@ const SideLink = ({ children, href, text }: SideLinkProps) => {
               }
               capitalize font-medium`}
       >
-        <Icon className="font-bold text-[25px]" href="#">{children}</Icon>
+        <Icon className="font-bold text-[25px]">{children}</Icon>
         <span className="text-[15px]">{text}</span>
       </Link>
     </div>
