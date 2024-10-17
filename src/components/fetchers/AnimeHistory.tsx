@@ -1,17 +1,17 @@
 "use client";
 
-import { useHistoryAnimeStore } from "@/hooks/useHistoryAnimeHooks";
+import { useHistoryAnime } from "@/hooks/useHistoryAnimeHooks";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import React, { useEffect } from "react";
 import { BsClock } from "react-icons/bs";
 
 const AnimeHistory = () => {
-  const { animeData, loading, error, fetchRecommendedAnime } =
-    useHistoryAnimeStore();
+  const { historyData, loading, error, fetchHistoryAnime } =
+  useHistoryAnime();
 
   useEffect(() => {
-    fetchRecommendedAnime();
+    fetchHistoryAnime();
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -19,7 +19,7 @@ const AnimeHistory = () => {
 
   return (
     <AnimeSwiper
-      data={animeData}
+      data={historyData}
       title="History Anime"
       icon={<BsClock size={17} className="mt-1" />}
       renderCard={({ id, title, imageUrl }) => (

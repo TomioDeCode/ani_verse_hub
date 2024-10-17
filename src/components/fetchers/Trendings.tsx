@@ -1,16 +1,16 @@
 "use client";
 
-import { useTrendingStore } from "@/hooks/useTrendingHooks";
+import { useTopAnime } from "@/hooks/useTrendingHooks";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import { IoMdStar } from "react-icons/io";
 import React, { useEffect } from "react";
 
 const Trendings = () => {
-  const { animeData, loading, error, fetchTrendings } = useTrendingStore();
+  const { anime, loading, error, fetchTrending } = useTopAnime();
 
   useEffect(() => {
-    fetchTrendings();
+    fetchTrending();
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -18,7 +18,7 @@ const Trendings = () => {
 
   return (
     <AnimeSwiper
-      data={animeData}
+      data={anime}
       title="Trending"
       icon={<IoMdStar size={25} />}
       renderCard={({ id, title, imageUrl }) => (

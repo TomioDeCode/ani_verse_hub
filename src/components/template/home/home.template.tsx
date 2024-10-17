@@ -1,7 +1,6 @@
 import AnimeTop from "@/components/fetchers/AnimeTop";
 import Navbar from "@/components/shared/Navbar";
 import Sidebar from "@/components/shared/Sidebar";
-import TopCard from "@/components/shared/TopCard";
 import React from "react";
 
 type HomeProps = {

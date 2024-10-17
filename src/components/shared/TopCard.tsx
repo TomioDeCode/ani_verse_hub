@@ -4,25 +4,15 @@ import { FaCrown } from "react-icons/fa";
 import Icon from "../common/Icon";
 import Image from "next/image";
 import { Button } from "../ui/button";
-
-interface AnimeTrend {
-  id: number;
-  title: string;
-  imageUrl: string;
-  score: string;
-  genres?: { name: string }[];
-}
+import { AnimeData } from "@/types/AnimeData";
 
 interface TopCardProps {
-  animeData?: AnimeTrend[];
+  animeData?: AnimeData[];
 }
 
 const TopCard = ({ animeData }: TopCardProps) => {
   const limitTitle = (title: string, maxLength: number) => {
-    if (title.length > maxLength) {
-      return title.slice(0, maxLength) + "...";
-    }
-    return title;
+    return title.length > maxLength ? title.slice(0, maxLength) + "..." : title;
   };
 
   return (
@@ -48,9 +38,9 @@ const TopCard = ({ animeData }: TopCardProps) => {
                   <Image
                     src={anime.imageUrl}
                     alt={`Image of ${anime.title}`}
-                    width={1000}
-                    height={1000}
-                    className="object-cover rounded-lg w-[85px] h-[150px]"
+                    width={85}
+                    height={150}
+                    className="object-cover rounded-lg"
                   />
                 </div>
                 <div className="flex flex-col text-sm space-y-1">

@@ -1,27 +1,45 @@
 import { useRecoilState, useRecoilValue } from "recoil";
+import { historyStateAtom } from "@/lib//recoils/atoms";
 import {
   historyAnimeSelector,
-  historyErrorSelector,
   historyLoadingSelector,
-  historyStateAtom,
-  fetchHistoryAnime,
-} from "@/store/useAnimeHistoryStore";
+  historyErrorSelector,
+} from "@/lib//recoils/selectors";
+import { fetchHistoryAnimeAPI } from "@/lib/api";
 
-export function useHistoryAnimeStore() {
-  const [trendState, setTrendState] = useRecoilState(historyStateAtom);
-  const animeData = useRecoilValue(historyAnimeSelector);
+export function useHistoryAnime() {
+  const [state, setState] = useRecoilState(historyStateAtom);
+  const historyData = useRecoilValue(historyAnimeSelector);
   const loading = useRecoilValue(historyLoadingSelector);
   const error = useRecoilValue(historyErrorSelector);
 
-  const fetchRecommendedAnime = async () => {
-    await fetchHistoryAnime(setTrendState);
+  const fetchHistoryAnime = async () => {
+    setState((prev) => ({
+      ...prev,
+      loading: true,
+      error: null,
+    }));
+
+    try {
+      const data = await fetchHistoryAnimeAPI();
+      setState((prev) => ({
+        ...prev,
+        historyData: data,
+        loading: false,
+      }));
+    } catch (err) {
+      setState((prev) => ({
+        ...prev,
+        error: err instanceof Error ? err.message : "An error occurred",
+        loading: false,
+      }));
+    }
   };
 
   return {
-    animeData,
+    historyData,
     loading,
     error,
-    fetchRecommendedAnime,
-    trendState,
+    fetchHistoryAnime,
   };
 }

@@ -1,11 +1,11 @@
 "use client";
-import { useTopAnimeStore } from "@/hooks/useTopAnimeHooks";
+import { useTopAnime } from "@/hooks/useTopAnimeHooks";
 import TopCard from "@/components/shared/TopCard";
 import React, { useEffect, useRef } from "react";
 
 const AnimeTop = () => {
-  const { animeData, loading, error, fetchRecommendedAnime } =
-    useTopAnimeStore();
+  const { anime, loading, error, fetchRecommendedAnime } =
+  useTopAnime();
   const isMounted = useRef(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const AnimeTop = () => {
 
   return (
     <>
-      <TopCard animeData={animeData} />
+      <TopCard animeData={anime} />
     </>
   );
 };
