@@ -1,13 +1,13 @@
 "use client";
 
-import { useTopAnime } from "@/hooks/useTrendingHooks";
+import { useTrendingAnime } from "@/hooks/useTrending";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import { IoMdStar } from "react-icons/io";
 import React, { useEffect } from "react";
 
 const Trendings = () => {
-  const { anime, loading, error, fetchTrending } = useTopAnime();
+  const { anime, loading, error, fetchTrending } = useTrendingAnime();
 
   useEffect(() => {
     fetchTrending();

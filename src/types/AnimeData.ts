@@ -1,10 +1,3 @@
-interface Genre {
-  mal_id: number;
-  type: string;
-  name: string;
-  url: string;
-}
-
 export interface AnimeData {
   id: number;
   title: string;
@@ -12,6 +5,12 @@ export interface AnimeData {
   url?: string;
   score?: string;
   genres?: any[];
+}
+
+export interface AnimeState {
+  data: AnimeData[];
+  loading: boolean;
+  error: string | null;
 }
 
 export interface RawAnimeResponse {

@@ -4,6 +4,7 @@ import DiscoveryTemplate from "@/components/template/discovery/discovery.templat
 
 import { useEffect } from "react";
 import { useAnimeStore } from "@/hooks/useAnimeSearchHooks";
+import { Input } from "@/components/ui/input";
 
 const HomePage = () => {
   const {
@@ -21,14 +22,14 @@ const HomePage = () => {
     fetchAnimeData();
   }, [currentPage, searchTerm]);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <DiscoveryTemplate>
+    <div>
       <h1>Anime List</h1>
       <div>
-        <input
+        <Input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -59,7 +60,7 @@ const HomePage = () => {
           Next Page
         </button>
       </div>
-    </DiscoveryTemplate>
+    </div>
   );
 };
 

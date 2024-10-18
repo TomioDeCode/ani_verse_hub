@@ -1,6 +1,6 @@
 "use client";
 
-import { useHistoryAnime } from "@/hooks/useHistoryAnimeHooks";
+import { useHistoryAnime } from "@/hooks/useHistoryAnime";
 import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import React, { useEffect } from "react";

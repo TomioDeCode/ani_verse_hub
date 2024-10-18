@@ -1,16 +1,16 @@
 "use client";
-import { useTopAnime } from "@/hooks/useTopAnimeHooks";
+import { useTopAnime } from "@/hooks/useTopAnime";
 import TopCard from "@/components/shared/TopCard";
 import React, { useEffect, useRef } from "react";
 
 const AnimeTop = () => {
-  const { anime, loading, error, fetchRecommendedAnime } =
+  const { anime, loading, error, fetchTopAnime } =
   useTopAnime();
   const isMounted = useRef(false);
 
   useEffect(() => {
     if (!isMounted.current) {
-      fetchRecommendedAnime();
+      fetchTopAnime();
       isMounted.current = true;
     }
   }, []);

@@ -1,13 +1,13 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { trendingStateAtom } from "@/lib/recoils/atoms";
+import { trendingStateAtom } from "@/store/atoms/atoms";
 import {
   trendingErrorSelector,
   trendingLoadingSelector,
   trendingSelector,
-} from "@/lib/recoils/selectors";
-import { fetchTrendingAPI } from "@/lib/api";
+} from "@/store/selectors/selectors";
+import { fetchTrendingAPI } from "@/util/api";
 
-export function useTopAnime() {
+export function useTrendingAnime() {
   const [state, setState] = useRecoilState(trendingStateAtom);
   const anime = useRecoilValue(trendingSelector);
   const loading = useRecoilValue(trendingLoadingSelector);
@@ -23,21 +23,18 @@ export function useTopAnime() {
     try {
       const data = await fetchTrendingAPI();
 
-      if (!data || data.length === 0) {
-        throw new Error("No anime data received");
-      }
-
       setState((prev) => ({
         ...prev,
-        trendingData: data,
+        data: data || [],
         loading: false,
       }));
     } catch (err) {
       setState((prev) => ({
         ...prev,
-        error: err instanceof Error ? err.message : "An error occurred",
+        error:
+          err instanceof Error ? err.message : "An unexpected error occurred",
         loading: false,
-        trendingData: [],
+        data: [],
       }));
     }
   };

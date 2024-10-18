@@ -1,11 +1,11 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { historyStateAtom } from "@/lib//recoils/atoms";
+import { historyStateAtom } from "@/store/atoms/atoms";
 import {
   historyAnimeSelector,
   historyLoadingSelector,
   historyErrorSelector,
-} from "@/lib//recoils/selectors";
-import { fetchHistoryAnimeAPI } from "@/lib/api";
+} from "@/store/selectors/selectors";
+import { fetchHistoryAnimeAPI } from "@/util/api";
 
 export function useHistoryAnime() {
   const [state, setState] = useRecoilState(historyStateAtom);
@@ -22,16 +22,19 @@ export function useHistoryAnime() {
 
     try {
       const data = await fetchHistoryAnimeAPI();
+
       setState((prev) => ({
         ...prev,
-        historyData: data,
+        data: data || [],
         loading: false,
       }));
     } catch (err) {
       setState((prev) => ({
         ...prev,
-        error: err instanceof Error ? err.message : "An error occurred",
+        error:
+          err instanceof Error ? err.message : "An unexpected error occurred",
         loading: false,
+        data: [],
       }));
     }
   };

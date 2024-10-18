@@ -1,17 +1,17 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { recomendedStateAtom } from "@/lib/recoils/atoms";
+import { recommendedStateAtom } from "@/store/atoms/atoms";
 import {
-  recomendedAnimeSelector,
-  recomendedErrorSelector,
-  recomendedLoadingSelector,
-} from "@/lib/recoils/selectors";
-import { fetchRecommendedAnimeAPI } from "@/lib/api";
+  recommendedAnimeSelector,
+  recommendedErrorSelector,
+  recommendedLoadingSelector,
+} from "@/store/selectors/selectors";
+import { fetchRecommendedAnimeAPI } from "@/util/api";
 
 export function useRecommendedAnime() {
-  const [state, setState] = useRecoilState(recomendedStateAtom);
-  const animeData = useRecoilValue(recomendedAnimeSelector);
-  const loading = useRecoilValue(recomendedLoadingSelector);
-  const error = useRecoilValue(recomendedErrorSelector);
+  const [state, setState] = useRecoilState(recommendedStateAtom);
+  const animeData = useRecoilValue(recommendedAnimeSelector);
+  const loading = useRecoilValue(recommendedLoadingSelector);
+  const error = useRecoilValue(recommendedErrorSelector);
 
   const fetchRecommendedAnime = async () => {
     setState((prev) => ({
@@ -23,21 +23,18 @@ export function useRecommendedAnime() {
     try {
       const data = await fetchRecommendedAnimeAPI();
 
-      if (!data || data.length === 0) {
-        throw new Error("No anime data received");
-      }
-
       setState((prev) => ({
         ...prev,
-        animeData: data,
+        data: data || [],
         loading: false,
       }));
     } catch (err) {
       setState((prev) => ({
         ...prev,
-        error: err instanceof Error ? err.message : "An error occurred",
+        error:
+          err instanceof Error ? err.message : "An unexpected error occurred",
         loading: false,
-        animeData: [],
+        data: [],
       }));
     }
   };

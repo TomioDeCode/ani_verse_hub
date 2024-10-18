@@ -1,19 +1,19 @@
 import { useRecoilState } from "recoil";
 import {
   animeDataState,
-  loadingState,
-  errorState,
+  globalLoadingState,
+  globalErrorState,
   currentPageState,
   searchTermState,
-} from "@/lib/recoils/atoms";
+} from "@/store/atoms/atoms";
 import { UseAnimeStore } from "@/types/UseAnimeStore";
 import { AnimeData } from "@/types/AnimeData";
-import { searchAnime } from "@/lib/api";
+import { searchAnime } from "@/util/api";
 
 export const useAnimeStore = (): UseAnimeStore => {
   const [animeData, setAnimeData] = useRecoilState<AnimeData[]>(animeDataState);
-  const [loading, setLoading] = useRecoilState(loadingState);
-  const [error, setError] = useRecoilState(errorState);
+  const [loading, setLoading] = useRecoilState(globalLoadingState);
+  const [error, setError] = useRecoilState(globalErrorState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermState);
 
@@ -24,13 +24,18 @@ export const useAnimeStore = (): UseAnimeStore => {
     try {
       const fetchedData = await searchAnime(searchTerm);
 
-      if (Array.isArray(fetchedData)) {
+      if (
+        Array.isArray(fetchedData) &&
+        fetchedData.every((item) => typeof item === "object")
+      ) {
         setAnimeData(fetchedData);
       } else {
-        throw new Error("Data fetched is not of type AnimeData[]");
+        throw new Error("Invalid data format. Expected an array of AnimeData.");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred.");
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred."
+      );
     } finally {
       setLoading(false);
     }

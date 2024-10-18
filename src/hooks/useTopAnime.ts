@@ -1,11 +1,11 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { topAnimeStateAtom } from "@/lib/recoils/atoms";
+import { topAnimeStateAtom } from "@/store/atoms/atoms";
 import {
   topAnimeErrorSelector,
   topAnimeLoadingSelector,
   topAnimeSelector,
-} from "@/lib/recoils/selectors";
-import { fetchTopAnimeAPI } from "@/lib/api";
+} from "@/store/selectors/selectors";
+import { fetchTopAnimeAPI } from "@/util/api";
 
 export function useTopAnime() {
   const [state, setState] = useRecoilState(topAnimeStateAtom);
@@ -13,7 +13,7 @@ export function useTopAnime() {
   const loading = useRecoilValue(topAnimeLoadingSelector);
   const error = useRecoilValue(topAnimeErrorSelector);
 
-  const fetchRecommendedAnime = async () => {
+  const fetchTopAnime = async () => {
     setState((prev) => ({
       ...prev,
       loading: true,
@@ -23,21 +23,18 @@ export function useTopAnime() {
     try {
       const data = await fetchTopAnimeAPI();
 
-      if (!data || data.length === 0) {
-        throw new Error("No anime data received");
-      }
-
       setState((prev) => ({
         ...prev,
-        topAnimeData: data,
+        data: data || [],
         loading: false,
       }));
     } catch (err) {
       setState((prev) => ({
         ...prev,
-        error: err instanceof Error ? err.message : "An error occurred",
+        error:
+          err instanceof Error ? err.message : "An unexpected error occurred",
         loading: false,
-        topAnimeData: [],
+        data: [],
       }));
     }
   };
@@ -46,6 +43,6 @@ export function useTopAnime() {
     anime,
     loading,
     error,
-    fetchRecommendedAnime,
+    fetchTopAnime,
   };
 }

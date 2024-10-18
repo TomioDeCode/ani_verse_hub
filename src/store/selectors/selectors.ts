@@ -1,23 +1,21 @@
 import {
-  recomendedStateAtom,
+  recommendedStateAtom,
   searchTermState,
   topAnimeStateAtom,
   trendingStateAtom,
-} from "./atoms";
+} from "../atoms/atoms";
 import { AnimeData } from "@/types/AnimeData";
-import { historyStateAtom } from "./atoms";
+import { historyStateAtom } from "../atoms/atoms";
 import { selector } from "recoil";
 
-// Fetch Anime Selector
 export const fetchAnimeSelector = selector({
   key: "fetchAnimeSelector",
-  get: async ({ get }) => get(searchTermState),
+  get: ({ get }) => get(searchTermState),
 });
 
-// History Anime Selector
 export const historyAnimeSelector = selector({
   key: "historyAnimeSelector",
-  get: ({ get }) => get(historyStateAtom).historyData,
+  get: ({ get }) => get(historyStateAtom).data,
 });
 
 export const historyLoadingSelector = selector({
@@ -30,26 +28,24 @@ export const historyErrorSelector = selector({
   get: ({ get }) => get(historyStateAtom).error,
 });
 
-// Recomendations Anime
-export const recomendedAnimeSelector = selector<AnimeData[]>({
-  key: "recomendedAnimeSelector",
-  get: ({ get }) => get(recomendedStateAtom).animeData,
+export const recommendedAnimeSelector = selector<AnimeData[]>({
+  key: "recommendedAnimeSelector",
+  get: ({ get }) => get(recommendedStateAtom).data,
 });
 
-export const recomendedLoadingSelector = selector<boolean>({
-  key: "recomendedLoadingSelector",
-  get: ({ get }) => get(recomendedStateAtom).loading,
+export const recommendedLoadingSelector = selector<boolean>({
+  key: "recommendedLoadingSelector",
+  get: ({ get }) => get(recommendedStateAtom).loading,
 });
 
-export const recomendedErrorSelector = selector<string | null>({
-  key: "recomendedErrorSelector",
-  get: ({ get }) => get(recomendedStateAtom).error,
+export const recommendedErrorSelector = selector<string | null>({
+  key: "recommendedErrorSelector",
+  get: ({ get }) => get(recommendedStateAtom).error,
 });
 
-// Top Anime Selector
 export const topAnimeSelector = selector<AnimeData[]>({
   key: "topAnimeSelector",
-  get: ({ get }) => get(topAnimeStateAtom).topAnimeData,
+  get: ({ get }) => get(topAnimeStateAtom).data,
 });
 
 export const topAnimeLoadingSelector = selector<boolean>({
@@ -62,10 +58,9 @@ export const topAnimeErrorSelector = selector<string | null>({
   get: ({ get }) => get(topAnimeStateAtom).error,
 });
 
-// Trending Selector
 export const trendingSelector = selector<AnimeData[]>({
   key: "trendingSelector",
-  get: ({ get }) => get(trendingStateAtom).trendingData,
+  get: ({ get }) => get(trendingStateAtom).data,
 });
 
 export const trendingLoadingSelector = selector<boolean>({
