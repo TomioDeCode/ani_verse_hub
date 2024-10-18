@@ -1,11 +1,11 @@
 import Sidebar from "@/components/shared/Sidebar";
 import React from "react";
 
-type DiscoveryTemplateProps = {
+type CommunityTemplateProps = {
   children: React.ReactNode;
 };
 
-const DiscoveryTemplate = ({ children }: DiscoveryTemplateProps) => {
+const CommunityTemplate = ({ children }: CommunityTemplateProps) => {
   return (
     <div className="flex h-[100vh] justify-center bg-secondary-foreground max-h-screen">
       <aside className="bg-foreground w-[20%] p-3">
@@ -16,4 +16,4 @@ const DiscoveryTemplate = ({ children }: DiscoveryTemplateProps) => {
   );
 };
 
-export default DiscoveryTemplate;
+export default CommunityTemplate;

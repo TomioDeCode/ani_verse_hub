@@ -3,12 +3,12 @@ import Navbar from "@/components/shared/Navbar";
 import Sidebar from "@/components/shared/Sidebar";
 import React from "react";
 
-type HomeProps = {
+type HomeTemplateProps = {
   children: React.ReactNode;
   showGreeting?: boolean;
 };
 
-const HomeTemplate = ({ children, showGreeting = false }: HomeProps) => {
+const HomeTemplate = ({ children, showGreeting = false }: HomeTemplateProps) => {
   return (
     <div className="flex h-[100vh] justify-center bg-secondary-foreground max-h-screen">
       <aside className="bg-foreground w-[20%] p-3">
