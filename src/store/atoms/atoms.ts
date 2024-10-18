@@ -26,6 +26,11 @@ export const searchTermState = atom<string>({
   default: "",
 });
 
+export const debouncedSearchState = atom<string>({
+  key: "debouncedSearchState",
+  default: "",
+});
+
 export const historyStateAtom = atom<AnimeState>({
   key: "historyStateAtom",
   default: {

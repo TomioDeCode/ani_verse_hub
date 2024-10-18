@@ -16,7 +16,7 @@ interface APIResponse<T> {
 const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_API_URL,
   MAX_RETRIES: 5,
-  ITEMS_PER_PAGE: 10,
+  ITEMS_PER_PAGE: 5,
   DEFAULT_HEADERS: {
     Accept: "application/json",
   },
@@ -156,15 +156,39 @@ export async function fetchTrendingAPI(): Promise<AnimeData[]> {
   }
 }
 
-export async function searchAnime(searchTerm: string): Promise<AnimeData[]> {
-  try {
-    const response = await fetchWithRetry<APIResponse<RawAnimeResponse[]>>(
-      `/anime?q=${encodeURIComponent(searchTerm)}`
-    );
-
-    return response.data.map(processAnimeData);
-  } catch (error) {
-    console.error("Error in searchAnime:", error);
-    throw new APIError("Failed to search anime");
+export const fetchAnimeData = async (
+  searchTerm: string,
+  retryCount = 0
+): Promise<AnimeData[]> => {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  if (!API_URL) {
+    throw new Error("API URL tidak ditemukan");
   }
-}
+
+  try {
+    const response = await fetch(`${API_URL}/anime?q=${searchTerm}`);
+
+    if (response.status === 429 && retryCount < 5) {
+      const delay = Math.pow(2, retryCount) * 1000;
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return fetchAnimeData(searchTerm, retryCount + 1);
+    }
+
+    if (!response.ok) {
+      throw new Error(`Gagal mengambil data anime: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const formattedData = data.data
+      .filter((item: any) => item.rating !== "Rx")
+      .map((item: any) => ({
+        id: item.mal_id,
+        title: item.title,
+        imageUrl: item.images.jpg.image_url,
+      }));
+
+    return formattedData;
+  } catch (err) {
+    throw new Error(err instanceof Error ? err.message : "Terjadi kesalahan.");
+  }
+};

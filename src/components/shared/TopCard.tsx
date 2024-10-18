@@ -34,13 +34,13 @@ const TopCard = ({ animeData }: TopCardProps) => {
                 key={anime.id}
                 className="flex items-center space-x-4 hover:bg-gray-700 p-3 rounded-lg transition-colors duration-300 max-w-md mx-auto"
               >
-                <div className="w-[85px] h-[150px] transform transition-transform hover:scale-105">
+                <div className="w-[85px] h-[135px] transform transition-transform hover:scale-105">
                   <Image
                     src={anime.imageUrl}
                     alt={`Image of ${anime.title}`}
                     width={85}
                     height={150}
-                    className="object-cover rounded-lg"
+                    className="object-cover rounded-lg w-[85px] h-[135px]"
                   />
                 </div>
                 <div className="flex flex-col text-sm space-y-1">
