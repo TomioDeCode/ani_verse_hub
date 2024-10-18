@@ -1,147 +1,170 @@
-import { AnimeData } from "@/types/AnimeData";
+import {
+  AnimeData,
+  RawAnimeResponse,
+  AnimeEntry,
+  RecommendationEntry,
+} from "@/types/AnimeData";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+interface APIResponse<T> {
+  data: T;
+  pagination?: {
+    last_visible_page: number;
+    has_next_page: boolean;
+  };
+}
 
-// Fetch History Anime
-export async function fetchHistoryAnimeAPI(): Promise<AnimeData[]> {
+const API_CONFIG = {
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL,
+  MAX_RETRIES: 5,
+  ITEMS_PER_PAGE: 10,
+  DEFAULT_HEADERS: {
+    Accept: "application/json",
+  },
+} as const;
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+class APIError extends Error {
+  constructor(
+    message: string,
+    public status?: number,
+    public endpoint?: string
+  ) {
+    super(message);
+    this.name = "APIError";
+  }
+}
+
+async function fetchWithRetry<T>(
+  endpoint: string,
+  options: RequestInit = {},
+  retryCount = 0
+): Promise<T> {
+  const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+
   try {
-    const response = await fetch(`${API_URL}/watch/episodes`);
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...API_CONFIG.DEFAULT_HEADERS,
+        ...options.headers,
+      },
+    });
+
+    if (response.status === 429 && retryCount < API_CONFIG.MAX_RETRIES) {
+      const backoffDelay = Math.pow(2, retryCount) * 1000;
+      await delay(backoffDelay);
+      return fetchWithRetry(endpoint, options, retryCount + 1);
+    }
 
     if (!response.ok) {
-      throw new Error("Failed to fetch history anime data");
+      throw new APIError(
+        `API request failed: ${response.statusText}`,
+        response.status,
+        endpoint
+      );
     }
 
     const data = await response.json();
-
-    if (!data?.data || !Array.isArray(data.data)) {
-      throw new Error("Unexpected response structure");
-    }
-
-    return data.data
-      .filter((history: any) => history.region_locked === false)
-      .map((history: any) => {
-        const anime = history.entry;
-        return {
-          id: anime.mal_id,
-          title: anime.title,
-          imageUrl: anime.images.jpg.image_url,
-          url: anime.url,
-        };
-      })
-      .slice(0, 10);
+    return data as T;
   } catch (error) {
-    console.error("Error fetching history anime data:", error);
-    throw new Error("Error fetching history Anime!");
+    if (error instanceof APIError) throw error;
+    throw new APIError(
+      `Failed to fetch from ${endpoint}: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
+      undefined,
+      endpoint
+    );
   }
 }
 
-// Fetch Recomended Anime
-export async function fetchRecommendedAnimeAPI(): Promise<AnimeData[]> {
+const processAnimeData = (anime: RawAnimeResponse): AnimeData => ({
+  id: anime.mal_id,
+  title: anime.title,
+  imageUrl: anime.images.jpg.image_url,
+  url: anime.url,
+  score: anime.score?.toString(),
+  genres: Array.isArray(anime.genres) ? anime.genres : [],
+});
+
+export async function fetchHistoryAnimeAPI(): Promise<AnimeData[]> {
   try {
-    const response = await fetch(`${API_URL}/recommendations/anime`);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch recommended anime data");
-    }
-
-    const rawData = await response.json();
-
-    if (!rawData?.data || !Array.isArray(rawData.data)) {
-      throw new Error("Unexpected response structure");
-    }
-    if (rawData.data.length === 0) {
-      throw new Error("No Anime Recomendations");
-    }
-
-    const processedData = rawData.data
-      .filter((rec: any) => {
-        if (!rec?.entry || !Array.isArray(rec.entry)) {
-          return false;
-        }
-        return true;
-      })
-      .flatMap((recommendation: any) => {
-        const entries = recommendation.entry.map((entry: any) => ({
-          id: entry.mal_id,
-          title: entry.title,
-          imageUrl: entry.images.jpg.image_url,
-          url: entry.url,
-        }));
-
-        return entries;
-      })
-      .slice(0, 10);
-
-    if (!processedData.length) {
-      throw new Error("No valid anime entries found after processing");
-    }
-
-    return processedData;
-  } catch (error) {
-    throw new Error("Failed to process anime data");
-  }
-}
-
-// Fetch Top Anime
-export async function fetchTopAnimeAPI(): Promise<AnimeData[]> {
-  try {
-    const response = await fetch(`${API_URL}/top/anime`);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch top anime data: ${response.statusText}`);
-    }
-
-    const rawData = await response.json();
-
-    if (!rawData?.data || !Array.isArray(rawData.data)) {
-      throw new Error("Unexpected response structure");
-    }
-
-    const processedData = rawData.data
-      .map((anime: any) => ({
-        id: anime.mal_id,
-        title: anime.title,
-        imageUrl: anime.images.jpg.image_url,
-        score: anime.score ? anime.score.toString() : undefined,
-        genres: Array.isArray(anime.genres) ? anime.genres : [],
-      }))
-      .slice(0, 10);
-
-    return processedData;
-  } catch (error) {
-    console.error("Error fetching top anime:", error);
-    throw new Error("Failed to process top anime data");
-  }
-}
-
-// Fetch Top Anime
-export async function fetchTrendingAPI(): Promise<AnimeData[]> {
-  try {
-    const response = await fetch(
-      `${API_URL}/anime?status=airing&min_score=8&max_score=9`
+    const response = await fetchWithRetry<APIResponse<AnimeEntry[]>>(
+      "/watch/episodes"
     );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch top anime data: ${response.statusText}`);
+    return response.data
+      .filter((history) => !history.region_locked)
+      .map((history) => processAnimeData(history.entry))
+      .slice(0, API_CONFIG.ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Error in fetchHistoryAnimeAPI:", error);
+    throw new APIError("Failed to fetch anime history");
+  }
+}
+
+export async function fetchRecommendedAnimeAPI(): Promise<AnimeData[]> {
+  try {
+    const response = await fetchWithRetry<APIResponse<RecommendationEntry[]>>(
+      "/recommendations/anime"
+    );
+
+    const processedData = response.data
+      .filter((rec) => rec?.entry && Array.isArray(rec.entry))
+      .flatMap((recommendation) => recommendation.entry.map(processAnimeData))
+      .slice(0, API_CONFIG.ITEMS_PER_PAGE);
+
+    if (!processedData.length) {
+      throw new APIError("No recommendations available");
     }
-
-    const rawData = await response.json();
-
-    if (!rawData?.data || !Array.isArray(rawData.data)) {
-      throw new Error("Unexpected response structure");
-    }
-
-    const processedData = rawData.data
-      .map((anime: any) => ({
-        id: anime.mal_id,
-        title: anime.title,
-        imageUrl: anime.images.jpg.image_url,
-      }))
-      .slice(0, 10);
 
     return processedData;
   } catch (error) {
-    console.error("Error fetching top anime:", error);
-    throw new Error("Failed to process top anime data");
+    console.error("Error in fetchRecommendedAnimeAPI:", error);
+    throw new APIError("Failed to fetch anime recommendations");
+  }
+}
+
+export async function fetchTopAnimeAPI(): Promise<AnimeData[]> {
+  try {
+    const response = await fetchWithRetry<APIResponse<RawAnimeResponse[]>>(
+      "/top/anime"
+    );
+
+    return response.data
+      .map(processAnimeData)
+      .slice(0, API_CONFIG.ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Error in fetchTopAnimeAPI:", error);
+    throw new APIError("Failed to fetch top anime");
+  }
+}
+
+export async function fetchTrendingAPI(): Promise<AnimeData[]> {
+  try {
+    const response = await fetchWithRetry<APIResponse<RawAnimeResponse[]>>(
+      "/anime?status=airing&min_score=8&max_score=9"
+    );
+
+    return response.data
+      .map(processAnimeData)
+      .slice(0, API_CONFIG.ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Error in fetchTrendingAPI:", error);
+    throw new APIError("Failed to fetch trending anime");
+  }
+}
+
+export async function searchAnime(searchTerm: string): Promise<AnimeData[]> {
+  try {
+    const response = await fetchWithRetry<APIResponse<RawAnimeResponse[]>>(
+      `/anime?q=${encodeURIComponent(searchTerm)}`
+    );
+
+    return response.data.map(processAnimeData);
+  } catch (error) {
+    console.error("Error in searchAnime:", error);
+    throw new APIError("Failed to search anime");
   }
 }

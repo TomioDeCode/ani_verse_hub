@@ -11,39 +11,7 @@ import { selector } from "recoil";
 // Fetch Anime Selector
 export const fetchAnimeSelector = selector({
   key: "fetchAnimeSelector",
-  get: async ({ get }) => {
-    const searchTerm = get(searchTermState);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-    const fetchWithRetry = async (retryCount = 0): Promise<AnimeData[]> => {
-      try {
-        const response = await fetch(`${API_URL}/anime?q=${searchTerm}`);
-
-        if (response.status === 429) {
-          if (retryCount < 5) {
-            const delay = Math.pow(2, retryCount) * 1000;
-            await new Promise((resolve) => setTimeout(resolve, delay));
-            return fetchWithRetry(retryCount + 1);
-          } else {
-            throw new Error("Terlalu banyak permintaan. Coba lagi nanti.");
-          }
-        }
-
-        if (!response.ok) throw new Error("Gagal mengambil data anime.");
-
-        const data = await response.json();
-        return data.data.map((item: any) => ({
-          mal_id: item.mal_id,
-          title: item.title,
-          imageUrl: item.images.jpg.image_url,
-        }));
-      } catch (err) {
-        throw err instanceof Error ? err : new Error("Terjadi kesalahan.");
-      }
-    };
-
-    return fetchWithRetry();
-  },
+  get: async ({ get }) => get(searchTermState),
 });
 
 // History Anime Selector
