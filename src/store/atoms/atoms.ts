@@ -66,3 +66,20 @@ export const trendingStateAtom = atom<AnimeState>({
     error: null,
   },
 });
+
+export interface ChatMessage {
+  id: string
+  text: string
+  timestamp: string
+  sender?: string
+}
+
+export const chatMessagesState = atom<ChatMessage[]>({
+  key: 'chatMessagesState',
+  default: []
+})
+
+export const socketConnectionState = atom<boolean>({
+  key: 'socketConnectionState',
+  default: false
+})

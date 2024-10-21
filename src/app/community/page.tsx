@@ -1,9 +1,12 @@
-import React from 'react'
+import Chat from "@/components/fetchers/Chat";
+import React from "react";
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <Chat />
+    </div>
+  );
+};
 
-export default page
+export default page;
