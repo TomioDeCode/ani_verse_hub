@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { AnimeData, AnimeState } from "@/types/AnimeData";
+import { AnimeData, AnimeState, AnimeDetailsGlo } from "@/types/AnimeData";
 
 export const globalLoadingState = atom<boolean>({
   key: "globalLoadingState",
@@ -14,6 +14,11 @@ export const globalErrorState = atom<string | null>({
 export const animeDataState = atom<AnimeData[]>({
   key: "animeDataState",
   default: [],
+});
+
+export const animeDataDetailsState = atom<AnimeDetailsGlo[] | null>({
+  key: "animeDataDetailsState",
+  default: null,
 });
 
 export const currentPageState = atom<number>({
@@ -68,18 +73,18 @@ export const trendingStateAtom = atom<AnimeState>({
 });
 
 export interface ChatMessage {
-  id: string
-  text: string
-  timestamp: string
-  sender?: string
+  id: string;
+  text: string;
+  timestamp: string;
+  sender?: string;
 }
 
 export const chatMessagesState = atom<ChatMessage[]>({
-  key: 'chatMessagesState',
-  default: []
-})
+  key: "chatMessagesState",
+  default: [],
+});
 
 export const socketConnectionState = atom<boolean>({
-  key: 'socketConnectionState',
-  default: false
-})
+  key: "socketConnectionState",
+  default: false,
+});

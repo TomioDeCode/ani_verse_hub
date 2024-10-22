@@ -147,6 +147,8 @@ export async function fetchTrendingAPI(): Promise<AnimeData[]> {
       "/anime?status=airing&min_score=8&max_score=9"
     );
 
+    console.log(response.data);
+
     return response.data
       .map(processAnimeData)
       .slice(0, API_CONFIG.ITEMS_PER_PAGE);
@@ -155,6 +157,14 @@ export async function fetchTrendingAPI(): Promise<AnimeData[]> {
     throw new APIError("Failed to fetch trending anime");
   }
 }
+
+export const fetchAnimeDetailsAPI = async (id: string) => {
+  const response = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch anime details");
+  }
+  return await response.json();
+};
 
 export const fetchAnimeData = async (
   searchTerm: string,

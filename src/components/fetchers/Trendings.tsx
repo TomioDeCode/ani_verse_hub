@@ -5,9 +5,11 @@ import AnimeSwiper from "@/components/fragments/AnimeSwiper";
 import AnimeCard from "@/components/core/AnimeCard";
 import { IoMdStar } from "react-icons/io";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const Trendings = () => {
+const HomePage = () => {
   const { anime, loading, error, fetchTrending } = useTrendingAnime();
+  const router = useRouter();
 
   useEffect(() => {
     fetchTrending();
@@ -22,15 +24,17 @@ const Trendings = () => {
       title="Trending"
       icon={<IoMdStar size={25} />}
       renderCard={({ id, title, imageUrl }) => (
-        <AnimeCard
-          imageClassName="h-[250px]"
-          contentClassName="h-[200px]"
-          anime={{ id, title, imageUrl }}
-          altText={`Anime cover for ${title}`}
-        />
+        <div onClick={() => router.push(`/home/anime/${id}`)}>
+          <AnimeCard
+            imageClassName="h-[250px]"
+            contentClassName="h-[200px]"
+            anime={{ id, title, imageUrl }}
+            altText={`Anime cover for ${title}`}
+          />
+        </div>
       )}
     />
   );
 };
 
-export default Trendings;
+export default HomePage;

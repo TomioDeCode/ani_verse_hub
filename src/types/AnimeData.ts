@@ -58,3 +58,30 @@ export interface TrendingState {
   loading: boolean;
   error: string | null;
 }
+
+interface AnimeGenre {
+  mal_id: number;
+  name: string;
+  type: string;
+}
+
+interface AnimeImages {
+  jpg: {
+    image_url: string;
+    small_image_url: string;
+    large_image_url: string;
+  };
+}
+
+export interface AnimeDetailsGlo {
+  mal_id: number;
+  title: string;
+  synopsis: string;
+  score: number;
+  genres: AnimeGenre[];
+  images: AnimeImages;
+  year: number;
+  duration: string;
+  popularity: number;
+  members: number;
+}
